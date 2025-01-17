@@ -609,21 +609,27 @@ function resetCard(duration = 500) {
  * 抽奖
  */
 function lottery() {
-  // if (isLotting) {
-  //   rotateObj.stop();
-  //   btns.lottery.innerHTML = "开始抽奖";
-  //   return;
-  // }
   btns.lottery.innerHTML = "结束抽奖";
   rotateBall().then(() => {
     // 将之前的记录置空
     currentLuckys = [];
     selectedCardIndex = [];
-    // 当前同时抽取的数目,当前奖品抽完还可以继续抽，但是不记录数据
-    let perCount = EACH_COUNT[currentPrizeIndex],
-      luckyData = basicData.luckyUsers[currentPrize.type],
-      leftCount = basicData.leftUsers.length,
-      leftPrizeCount = currentPrize.count - (luckyData ? luckyData.length : 0);
+    
+    // 获取当前奖项剩余数量
+    let luckyData = basicData.luckyUsers[currentPrize.type];
+    let leftPrizeCount = currentPrize.count - (luckyData ? luckyData.length : 0);
+    
+    // 确定本次抽取数量
+    let perCount;
+    if (leftPrizeCount <= 25) {
+      // 如果剩余奖项小于等于25个，一次抽完
+      perCount = leftPrizeCount;
+    } else {
+      // 如果剩余奖项大于25个，每次抽25个
+      perCount = 25;
+    }
+
+    let leftCount = basicData.leftUsers.length;
 
     if (leftCount < perCount) {
       addQipao("剩余参与抽奖人员不足，现在重新设置所有人员可以进行二次抽奖！");
@@ -635,20 +641,14 @@ function lottery() {
       let luckyId = random(leftCount);
       currentLuckys.push(basicData.leftUsers.splice(luckyId, 1)[0]);
       leftCount--;
-      leftPrizeCount--;
 
       let cardIndex = random(TOTAL_CARDS);
       while (selectedCardIndex.includes(cardIndex)) {
         cardIndex = random(TOTAL_CARDS);
       }
       selectedCardIndex.push(cardIndex);
-
-      if (leftPrizeCount === 0) {
-        break;
-      }
     }
 
-    // console.log(currentLuckys);
     selectCard();
   });
 }
@@ -686,7 +686,18 @@ function saveData() {
 
 function changePrize() {
   let luckys = basicData.luckyUsers[currentPrize.type];
-  let luckyCount = (luckys ? luckys.length : 0) + EACH_COUNT[currentPrizeIndex];
+  let leftPrizeCount = currentPrize.count - (luckys ? luckys.length : 0);
+  let luckyCount;
+  
+  // 确定本次抽取数量
+  if (leftPrizeCount <= 25) {
+    // 如果剩余奖项小于等于25个，一次抽完
+    luckyCount = (luckys ? luckys.length : 0) + leftPrizeCount;
+  } else {
+    // 如果剩余奖项大于25个，每次抽25个
+    luckyCount = (luckys ? luckys.length : 0) + 25;
+  }
+
   // 修改左侧prize的数目和百分比
   setPrizeData(currentPrizeIndex, luckyCount);
 }
