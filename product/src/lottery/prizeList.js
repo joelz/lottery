@@ -158,7 +158,7 @@ function showPrizeList(currentPrizeIndex) {
   if (currentPrize.type === defaultType) {
     currentPrize.count === "不限制";
   }
-  let htmlCode = `<div class="prize-mess">正在抽取<label id="prizeType" class="prize-shine">${currentPrize.text}</label><label id="prizeText" class="prize-shine">${currentPrize.title}</label>，剩余<label id="prizeLeft" class="prize-shine">${currentPrize.count}</label>个</div><ul class="prize-list">`;
+  let htmlCode = `<div class="prize-mess">正在抽取<label id="prizeType" class="prize-shine">${currentPrize.text}</label><label id="prizeText" class="prize-shine">${currentPrize.title}</label>，共<label id="prizeTotal" class="prize-shine">${currentPrize.count}</label>个，剩余<label id="prizeLeft" class="prize-shine">${currentPrize.count}</label>个</div><ul class="prize-list">`;
   prizes.forEach(item => {
     if (item.type === defaultType) {
       return true;
@@ -221,6 +221,7 @@ let setPrizeData = (function () {
       prizeElement.prizeType = document.querySelector("#prizeType");
       prizeElement.prizeLeft = document.querySelector("#prizeLeft");
       prizeElement.prizeText = document.querySelector("#prizeText");
+      prizeElement.prizeTotal = document.querySelector("#prizeTotal");
     }
 
     if (isInit) {
@@ -259,6 +260,7 @@ let setPrizeData = (function () {
     elements.bar && (elements.bar.style.width = percent * 100 + "%");
     elements.text && (elements.text.textContent = count + "/" + totalCount);
     prizeElement.prizeLeft.textContent = count;
+    prizeElement.prizeTotal.textContent = totalCount;
   };
 })();
 
