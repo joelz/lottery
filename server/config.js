@@ -57,7 +57,7 @@ const prizes = [
   },
   {
     type: 7,
-    count: 11,
+    count: 52,
     text: "六等奖",
     title: "漫步者蓝牙耳机",
     img: "../img/edifier.jpg"
