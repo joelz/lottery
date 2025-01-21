@@ -138,6 +138,15 @@ button:active {
   transition: background-color 1.5s ease-in 0.3s;
   background-color: rgba(253, 105, 0, 0.85) !important;
   box-shadow: 0 0 12px rgba(253, 105, 0, 0.95);
+  height: 8vh;
+}
+
+.prize.element .company {
+  top: 0.4vh;
+}
+
+.prize.element .name {
+  top: 3vh;
 }
 
 .prize .company,

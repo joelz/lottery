@@ -473,39 +473,33 @@ function render() {
 function selectCard(duration = 600) {
   rotate = false;
   let width = 140,
-    tag = -(currentLuckys.length - 1) / 2,
+    height = 80,
     locates = [];
 
-  // 计算位置信息, 大于5个分两排显示
-  if (currentLuckys.length > 5) {
-    let yPosition = [-87, 87],
-      l = selectedCardIndex.length,
-      mid = Math.ceil(l / 2);
-    tag = -(mid - 1) / 2;
-    for (let i = 0; i < mid; i++) {
-      locates.push({
-        x: tag * width * Resolution,
-        y: yPosition[0] * Resolution
-      });
-      tag++;
-    }
+  // Calculate rows and positions
+  let rows = Math.ceil(currentLuckys.length / 5);
+  let totalHeight = (rows - 1) * height;
+  
+  // Calculate starting Y position to center vertically
+  let startY = totalHeight / 2;
 
-    tag = -(l - mid - 1) / 2;
-    for (let i = mid; i < l; i++) {
-      locates.push({
-        x: tag * width * Resolution,
-        y: yPosition[1] * Resolution
-      });
-      tag++;
-    }
-  } else {
-    for (let i = selectedCardIndex.length; i > 0; i--) {
-      locates.push({
-        x: tag * width * Resolution,
-        y: 0 * Resolution
-      });
-      tag++;
-    }
+  // Generate position for each card, 5 per row
+  for (let i = 0; i < currentLuckys.length; i++) {
+    let row = Math.floor(i / 5);
+    let col = i % 5;
+    
+    // Calculate cards in current row
+    let cardsInThisRow = (row === Math.floor((currentLuckys.length - 1) / 5)) 
+      ? ((currentLuckys.length - 1) % 5) + 1 
+      : 5;
+    
+    // Center cards in current row
+    let startX = ((cardsInThisRow - 1) / 2) * width;
+    
+    locates.push({
+      x: (col * width - startX) * Resolution,
+      y: (startY - row * height) * Resolution
+    });
   }
 
   let text = currentLuckys.map(item => item[1]);
@@ -520,7 +514,7 @@ function selectCard(duration = 600) {
       .to(
         {
           x: locates[index].x,
-          y: locates[index].y * Resolution,
+          y: locates[index].y,
           z: 2200
         },
         Math.random() * duration + duration
@@ -541,7 +535,6 @@ function selectCard(duration = 600) {
       .start();
 
     object.element.classList.add("prize");
-    tag++;
   });
 
   new TWEEN.Tween(this)
@@ -549,7 +542,6 @@ function selectCard(duration = 600) {
     .onUpdate(render)
     .start()
     .onComplete(() => {
-      // 动画结束后可以操作
       setLotteryStatus();
     });
 }
