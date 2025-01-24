@@ -897,6 +897,6 @@ window.onload = function () {
   );
 
   setTimeout(function () {
-    musicBox.click();
+    // musicBox.click();
   }, 1000);
 };
