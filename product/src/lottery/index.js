@@ -210,7 +210,14 @@ function bindEvent() {
     if (isLotting) {
       if (e.target.id === "lottery") {
         rotateObj.stop();
-        btns.lottery.innerHTML = "开始抽奖";
+        setTimeout(() => {
+          // console.log(currentPrize.count, currentLuckys.length, basicData.luckyUsers[currentPrize.type].length);
+          if (currentPrize && currentPrize.count <= (basicData.luckyUsers[currentPrize.type].length + currentLuckys.length)) {
+            btns.lottery.innerHTML = "准备抽取下一奖项";
+          } else {
+            btns.lottery.innerHTML = "开始抽奖";
+          }
+        }, 500);
       } else {
         addQipao("正在抽奖，抽慢一点点～～");
       }
@@ -256,11 +263,27 @@ function bindEvent() {
         break;
       // 抽奖
       case "lottery":
+        if (e.target.innerHTML === "准备抽取下一奖项") {
+          // 每次抽奖前先保存上一次的抽奖数据
+          saveData().then(res => {
+            resetCard().then(res => {
+              // 将之前的记录置空
+              currentLuckys = [];
+
+              changePrize(true);
+              e.target.innerHTML = '开始抽奖';
+              document.querySelector('#reLottery').style.display = 'none';
+            });
+            addQipao(`准备抽取下一奖项`);
+          });
+          return;
+        }
         setLotteryStatus(true);
         // 每次抽奖前先保存上一次的抽奖数据
         saveData();
         //更新剩余抽奖数目的数据显示
         changePrize();
+        document.querySelector('#reLottery').style.display = 'inline-block';
         resetCard().then(res => {
           // 抽奖
           lottery();
@@ -611,7 +634,7 @@ function lottery() {
     // 获取当前奖项剩余数量
     let luckyData = basicData.luckyUsers[currentPrize.type];
     let leftPrizeCount = currentPrize.count - (luckyData ? luckyData.length : 0);
-    
+
     // 确定本次抽取数量
     let perCount;
     if (leftPrizeCount <= 25) {
@@ -677,18 +700,23 @@ function saveData() {
   return Promise.resolve();
 }
 
-function changePrize() {
+function changePrize(isInit = false) {
   let luckys = basicData.luckyUsers[currentPrize.type];
   let leftPrizeCount = currentPrize.count - (luckys ? luckys.length : 0);
   let luckyCount;
-  
-  // 确定本次抽取数量
-  if (leftPrizeCount <= 25) {
-    // 如果剩余奖项小于等于25个，一次抽完
-    luckyCount = (luckys ? luckys.length : 0) + leftPrizeCount;
+
+  // 初始化时，本次抽奖数目为0
+  if (isInit) {
+    luckyCount = 0;
   } else {
-    // 如果剩余奖项大于25个，每次抽25个
-    luckyCount = (luckys ? luckys.length : 0) + 25;
+    // 确定本次抽取数量
+    if (leftPrizeCount <= 25) {
+      // 如果剩余奖项小于等于25个，一次抽完
+      luckyCount = (luckys ? luckys.length : 0) + leftPrizeCount;
+    } else {
+      // 如果剩余奖项大于25个，每次抽25个
+      luckyCount = (luckys ? luckys.length : 0) + 25;
+    }
   }
 
   // 修改左侧prize的数目和百分比
