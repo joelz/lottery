@@ -15,6 +15,12 @@
   })();
 
   var c = canvas.getContext("2d");
+  var backgroundReady = false;
+  var backgroundImage = new Image();
+  backgroundImage.onload = function () {
+    backgroundReady = true;
+  };
+  backgroundImage.src = "./img/background.jpg";
 
   var numStars = 800;
   var radius = "0." + Math.floor(Math.random() * 9) + 1;
@@ -76,8 +82,14 @@
       initializeStars();
     }
     if (warp == 0) {
-      c.fillStyle = "rgba(0,10,20,1)";
-      c.fillRect(0, 0, canvas.width, canvas.height);
+      if (backgroundReady) {
+        c.drawImage(backgroundImage, 0, 0, canvas.width, canvas.height);
+        c.fillStyle = "rgba(0, 10, 20, 0.7)";
+        c.fillRect(0, 0, canvas.width, canvas.height);
+      } else {
+        c.fillStyle = "rgba(0,10,20,1)";
+        c.fillRect(0, 0, canvas.width, canvas.height);
+      }
     }
     c.fillStyle = "rgba(209, 255, 255, " + radius + ")";
     for (i = 0; i < numStars; i++) {
