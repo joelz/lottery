@@ -46,7 +46,8 @@ let selectedCardIndex = [],
     prizes: [], //奖品信息
     users: [], //所有人员
     luckyUsers: {}, //已中奖人员
-    leftUsers: [] //未中奖人员
+    leftUsers: [], //未中奖人员
+    excludeByPrize: {} // 各奖项排除名单
   },
   interval,
   // 当前抽的奖项，从最低奖开始抽，直到抽到大奖
@@ -75,8 +76,13 @@ function initAll() {
       TOTAL_CARDS = ROW_COUNT * COLUMN_COUNT;
 
       // 读取当前已设置的抽奖结果
-      basicData.leftUsers = data.leftUsers;
+      basicData.leftUsers = data.leftUsers || [];
       basicData.luckyUsers = data.luckyData;
+      basicData.excludeByPrize = prepareExcludeMap(
+        data.excludeByPrize ||
+          (data.cfgData && data.cfgData.PRIZE_EXCLUDES) ||
+          {}
+      );
 
       let prizeIndex = basicData.prizes.length - 1;
       for (; prizeIndex > -1; prizeIndex--) {
@@ -102,6 +108,9 @@ function initAll() {
     url: "/getUsers",
     success(data) {
       basicData.users = data;
+      if (basicData.leftUsers.length === 0) {
+        basicData.leftUsers = basicData.users.slice();
+      }
 
       initCards();
       // startMaoPao();
@@ -645,18 +654,41 @@ function lottery() {
       perCount = 25;
     }
 
-    let leftCount = basicData.leftUsers.length;
+    let eligiblePool = buildEligiblePool(currentPrize.type, {
+      includeIndex: true
+    });
 
-    if (leftCount < perCount) {
+    console.log('pool', eligiblePool.map(item => item.user[0]).sort());
+
+    if (eligiblePool.length < perCount) {
       addQipao("剩余参与抽奖人员不足，现在重新设置所有人员可以进行二次抽奖！");
       basicData.leftUsers = basicData.users.slice();
-      leftCount = basicData.leftUsers.length;
+      eligiblePool = buildEligiblePool(currentPrize.type, {
+        includeIndex: true
+      });
     }
 
+    if (eligiblePool.length === 0) {
+      addQipao(
+        `当前奖项[${currentPrize.title}]没有可参与人员，请检查排除名单。`
+      );
+      btns.lottery.innerHTML = "开始抽奖";
+      setLotteryStatus();
+      return;
+    }
+
+    if (eligiblePool.length < perCount) {
+      addQipao("当前奖项可参与人数少于计划抽取数量，将全部抽完。");
+      perCount = eligiblePool.length;
+    }
+
+    let usedLeftIndexes = [];
+
     for (let i = 0; i < perCount; i++) {
-      let luckyId = random(leftCount);
-      currentLuckys.push(basicData.leftUsers.splice(luckyId, 1)[0]);
-      leftCount--;
+      let luckyIdx = random(eligiblePool.length);
+      let pick = eligiblePool.splice(luckyIdx, 1)[0];
+      currentLuckys.push(pick.user);
+      usedLeftIndexes.push(pick.leftIndex);
 
       let cardIndex = random(TOTAL_CARDS);
       while (selectedCardIndex.includes(cardIndex)) {
@@ -665,6 +697,13 @@ function lottery() {
       selectedCardIndex.push(cardIndex);
     }
 
+    usedLeftIndexes
+      .sort((a, b) => b - a)
+      .forEach(index => {
+        basicData.leftUsers.splice(index, 1);
+      });
+
+    console.log('leftUsers', basicData.leftUsers.map(item => item[0]).sort());
     selectCard();
   });
 }
@@ -729,6 +768,66 @@ function changePrize(isInit = false) {
 function random(num) {
   // Math.floor取到0-num-1之间数字的概率是相等的
   return Math.floor(Math.random() * num);
+}
+
+function prepareExcludeMap(source = {}) {
+  let map = {};
+  if (!source) {
+    return map;
+  }
+  Object.keys(source).forEach(key => {
+    let list = source[key];
+    if (!Array.isArray(list)) {
+      return;
+    }
+    map[key] = new Set(list.map(item => String(item)));
+  });
+  return map;
+}
+
+function getUserUniqueId(user) {
+  if (!user) {
+    return undefined;
+  }
+  if (Array.isArray(user)) {
+    return user[0];
+  }
+  if (typeof user === "object") {
+    return (
+      user.userId ||
+      user.id ||
+      user.employeeId ||
+      user.code ||
+      user.workId ||
+      user[0]
+    );
+  }
+  return user;
+}
+
+function isUserExcluded(prizeType, user) {
+  let excludeSet = basicData.excludeByPrize[prizeType];
+  if (!excludeSet || excludeSet.size === 0) {
+    return false;
+  }
+  let uid = getUserUniqueId(user);
+  if (uid === undefined || uid === null) {
+    return false;
+  }
+  return excludeSet.has(String(uid));
+}
+
+function buildEligiblePool(prizeType, options = {}) {
+  let includeIndex = !!options.includeIndex;
+  let pool = [];
+  let list = basicData.leftUsers || [];
+  list.forEach((user, index) => {
+    if (isUserExcluded(prizeType, user)) {
+      return;
+    }
+    pool.push(includeIndex ? { user, leftIndex: index } : user);
+  });
+  return pool;
 }
 
 /**

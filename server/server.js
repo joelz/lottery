@@ -70,7 +70,8 @@ router.post("/getTempData", (req, res, next) => {
   res.json({
     cfgData: cfg,
     leftUsers: curData.leftUsers,
-    luckyData: luckyData
+    luckyData: luckyData,
+    excludeByPrize: cfg.PRIZE_EXCLUDES || {}
   });
 });
 

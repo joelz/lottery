@@ -67,9 +67,22 @@ const prizes = [
 /**
  * 一次抽取的奖品个数与prizes对应
  */
-const EACH_COUNT = [1, 1, 5, 6, 7, 8, 9, 10];
+const EACH_COUNT = [1, 1, 5, 6, 7, 8];
+
+/**
+ * 指定奖项需要排除的人员（按工号/唯一 ID）列表
+ * key 对应 prize.type，value 为数组
+ */
+const PRIZE_EXCLUDES = {
+  // 例如：1: ["10001", "10002"]
+  1: ["000002", "000004", "000006", "000005"],
+  2: ["000002", "000003", "000007"],
+  3: ["000002"],
+  4: ["000002"],
+};
 
 module.exports = {
   prizes,
-  EACH_COUNT
+  EACH_COUNT,
+  PRIZE_EXCLUDES
 };
