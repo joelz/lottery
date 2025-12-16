@@ -580,3 +580,83 @@ button:active {
     opacity: 0.8;
   }
 }
+
+.redraw-modal {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 6;
+}
+
+.redraw-modal.none {
+  display: none;
+}
+
+.redraw-modal__content {
+  width: 320px;
+  padding: 20px 24px;
+  background: rgba(0, 17, 34, 0.9);
+  border: 1px solid rgba(127, 255, 255, 0.4);
+  box-shadow: 0 0 20px rgba(0, 255, 255, 0.25);
+  color: #fff;
+  border-radius: 6px;
+  box-sizing: border-box;
+}
+
+.redraw-modal__title {
+  font-size: 18px;
+  margin-bottom: 12px;
+  color: rgba(127, 255, 255, 0.9);
+}
+
+.redraw-modal__field {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 10px;
+}
+
+.redraw-modal__field label {
+  font-size: 14px;
+  color: rgba(255, 255, 255, 0.8);
+}
+
+.redraw-modal__field input {
+  padding: 10px;
+  font-size: 16px;
+  border-radius: 4px;
+  border: 1px solid rgba(127, 255, 255, 0.5);
+  background: rgba(0, 0, 0, 0.3);
+  color: #fff;
+  outline: none;
+}
+
+.redraw-modal__field input:focus {
+  border-color: rgba(0, 255, 255, 0.8);
+  box-shadow: 0 0 6px rgba(0, 255, 255, 0.35);
+}
+
+.redraw-modal__actions {
+  display: flex;
+  gap: 12px;
+  margin: 12px 0 6px;
+}
+
+.redraw-modal__actions button {
+  flex: 1;
+}
+
+.redraw-modal__error {
+  min-height: 18px;
+  font-size: 13px;
+  color: #ff8a80;
+}
+
+.redraw-modal__hint {
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.6);
+  text-align: right;
+}

@@ -43,5 +43,27 @@
     </div>
 
     <div class="qipao-container"></div>
+
+    <div id="redrawModal" class="redraw-modal none">
+      <div class="redraw-modal__content">
+        <div class="redraw-modal__title">补抽当前奖项</div>
+        <div class="redraw-modal__field">
+          <label for="redrawCountInput">补抽数量</label>
+          <input
+            id="redrawCountInput"
+            type="number"
+            min="1"
+            inputmode="numeric"
+            placeholder="请输入补抽数量"
+          />
+        </div>
+        <div id="redrawError" class="redraw-modal__error"></div>
+        <div class="redraw-modal__actions">
+          <button id="redrawConfirm">确认</button>
+          <button id="redrawCancel">取消</button>
+        </div>
+        <div class="redraw-modal__hint">快捷键：Shift + R</div>
+      </div>
+    </div>
   </body>
 </html>

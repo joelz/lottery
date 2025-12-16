@@ -202,7 +202,7 @@ function resetPrize(currentPrizeIndex) {
 }
 
 let setPrizeData = (function () {
-  return function (currentPrizeIndex, count, isInit) {
+  return function (currentPrizeIndex, count, isInit, redrawCount) {
     let currentPrize = prizes[currentPrizeIndex],
       type = currentPrize.type,
       elements = prizeElement[type],
@@ -259,7 +259,7 @@ let setPrizeData = (function () {
     let percent = (count / totalCount).toFixed(2);
     elements.bar && (elements.bar.style.width = percent * 100 + "%");
     elements.text && (elements.text.textContent = count + "/" + totalCount);
-    prizeElement.prizeLeft.textContent = count;
+    prizeElement.prizeLeft.textContent = redrawCount ? redrawCount : count;
     prizeElement.prizeTotal.textContent = totalCount;
   };
 })();

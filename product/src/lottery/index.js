@@ -20,6 +20,13 @@ let TOTAL_CARDS,
     lotteryBar: document.querySelector("#lotteryBar"),
     lottery: document.querySelector("#lottery")
   },
+  redraw = {
+    modal: document.querySelector("#redrawModal"),
+    input: document.querySelector("#redrawCountInput"),
+    confirm: document.querySelector("#redrawConfirm"),
+    cancel: document.querySelector("#redrawCancel"),
+    error: document.querySelector("#redrawError")
+  },
   prizes,
   EACH_COUNT,
   ROW_COUNT = 7,
@@ -42,6 +49,7 @@ let rotateObj;
 
 let selectedCardIndex = [],
   rotate = false,
+  isRedrawOpen = false,
   basicData = {
     prizes: [], //奖品信息
     users: [], //所有人员
@@ -209,6 +217,116 @@ function setLotteryStatus(status = false) {
   isLotting = status;
 }
 
+function getCurrentLuckyCount() {
+  if (!currentPrize) {
+    return 0;
+  }
+  let list = basicData.luckyUsers[currentPrize.type] || [];
+  return list.length;
+}
+
+function isCurrentPrizeCompleted() {
+  if (!currentPrize) {
+    return false;
+  }
+  console.log(getCurrentLuckyCount())
+  return getCurrentLuckyCount() >= currentPrize.count;
+}
+
+function toggleRedrawModal(show) {
+  if (!redraw.modal) {
+    return;
+  }
+  isRedrawOpen = !!show;
+  redraw.modal.classList[show ? "remove" : "add"]("none");
+  if (show) {
+    redraw.input.value = "";
+    redraw.error.textContent = "";
+    redraw.input.focus();
+  }
+}
+
+function openRedrawPrompt() {
+  if (isLotting) {
+    addQipao("正在抽奖，请稍后再补抽。");
+    return;
+  }
+  if (!currentPrize) {
+    return;
+  }
+  // if (!isCurrentPrizeCompleted()) {
+  //   addQipao("当前奖项未抽完，暂不能补抽。");
+  //   return;
+  // }
+  toggleRedrawModal(true);
+}
+
+function handleRedrawSubmit() {
+  if (!currentPrize) {
+    return;
+  }
+  let value = Number(redraw.input.value);
+  if (!Number.isFinite(value) || value <= 0) {
+    redraw.error.textContent = "请输入大于0的数量";
+    redraw.input.focus();
+    return;
+  }
+  if (value > basicData.leftUsers.length) {
+    redraw.error.textContent = "剩余未中奖人数不足";
+    redraw.input.focus();
+    return;
+  }
+
+  currentPrize.count += value;
+  basicData.prizes[currentPrizeIndex].count = currentPrize.count;
+
+  let luckyCount = getCurrentLuckyCount();
+  setPrizeData(currentPrizeIndex, luckyCount, false, value);
+
+  btns.lottery.innerHTML = "开始抽奖";
+  document.querySelector("#reLottery").style.display = "inline-block";
+
+  addQipao(`已为[${currentPrize.title}]追加 ${value} 个名额，继续抽取吧。`);
+  toggleRedrawModal(false);
+}
+
+function bindRedrawEvent() {
+  if (!redraw.modal) {
+    return;
+  }
+
+  redraw.confirm &&
+    redraw.confirm.addEventListener("click", () => {
+      handleRedrawSubmit();
+    });
+
+  redraw.cancel &&
+    redraw.cancel.addEventListener("click", () => {
+      toggleRedrawModal(false);
+    });
+
+  redraw.input &&
+    redraw.input.addEventListener("keydown", e => {
+      if (e.key === "Enter") {
+        handleRedrawSubmit();
+      }
+      if (e.key === "Escape") {
+        toggleRedrawModal(false);
+      }
+    });
+
+  window.addEventListener("keydown", e => {
+    if (isRedrawOpen && e.key === "Escape") {
+      toggleRedrawModal(false);
+      return;
+    }
+    if (e.code === "KeyR" && e.shiftKey && !isRedrawOpen) {
+      e.preventDefault();
+      openRedrawPrompt();
+    }
+  });
+}
+
 /**
  * 事件绑定
  */
@@ -330,6 +448,8 @@ function bindEvent() {
   });
 
   window.addEventListener("resize", onWindowResize, false);
+
+  bindRedrawEvent();
 }
 
 function switchScreen(type) {
