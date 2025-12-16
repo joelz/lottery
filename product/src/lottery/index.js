@@ -92,11 +92,15 @@ function initAll() {
           {}
       );
 
+      // data.luckyData 的类型是 object，key 是奖项的 type，value 是获奖人员列表
+      console.log(basicData.prizes, data.luckyData)
       let prizeIndex = basicData.prizes.length - 1;
       for (; prizeIndex > -1; prizeIndex--) {
+        const prizeType = basicData.prizes[prizeIndex].type;
+
         if (
-          data.luckyData[prizeIndex] &&
-          data.luckyData[prizeIndex].length >=
+          data.luckyData[prizeType] &&
+          data.luckyData[prizeType].length >=
             basicData.prizes[prizeIndex].count
         ) {
           continue;
