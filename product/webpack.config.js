@@ -69,6 +69,14 @@ module.exports = {
       {
         from: "./src/lib",
         to: "./lib"
+      },
+      {
+        from: path.join(__dirname, "../server/vote-results.html"),
+        to: "./vote-results.html"
+      },
+      {
+        from: path.join(__dirname, "../server/vote-data.json"),
+        to: "./vote-data.json"
       }
     ])
   ]

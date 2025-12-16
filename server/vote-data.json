@@ -1,0 +1,246 @@
+{
+  "sourceFile": "年会最佳.xlsx",
+  "updatedAt": "2025-12-16T02:56:01.690Z",
+  "totalSubmissions": 260,
+  "awards": {
+    "bestProgram": {
+      "title": "最佳节目",
+      "items": [
+        {
+          "label": "节目1",
+          "count": 52
+        },
+        {
+          "label": "节目2",
+          "count": 47
+        },
+        {
+          "label": "节目3",
+          "count": 43
+        },
+        {
+          "label": "节目4",
+          "count": 38
+        },
+        {
+          "label": "节目5",
+          "count": 35
+        },
+        {
+          "label": "节目6",
+          "count": 30
+        },
+        {
+          "label": "节目7",
+          "count": 27
+        },
+        {
+          "label": "节目8",
+          "count": 21
+        },
+        {
+          "label": "节目9",
+          "count": 18
+        },
+        {
+          "label": "节目10",
+          "count": 12
+        },
+        {
+          "label": "节目11",
+          "count": 8
+        }
+      ]
+    },
+    "bestCosplayTeam": {
+      "title": "最佳COSPLAY团队",
+      "items": [
+        {
+          "label": "团队1",
+          "count": 34
+        },
+        {
+          "label": "团队2",
+          "count": 31
+        },
+        {
+          "label": "团队3",
+          "count": 29
+        },
+        {
+          "label": "团队4",
+          "count": 27
+        },
+        {
+          "label": "团队5",
+          "count": 25
+        },
+        {
+          "label": "团队6",
+          "count": 23
+        },
+        {
+          "label": "团队7",
+          "count": 21
+        },
+        {
+          "label": "团队8",
+          "count": 20
+        },
+        {
+          "label": "团队9",
+          "count": 19
+        },
+        {
+          "label": "团队10",
+          "count": 18
+        },
+        {
+          "label": "团队11",
+          "count": 17
+        },
+        {
+          "label": "团队12",
+          "count": 16
+        },
+        {
+          "label": "团队13",
+          "count": 14
+        },
+        {
+          "label": "团队14",
+          "count": 12
+        },
+        {
+          "label": "团队15",
+          "count": 11
+        },
+        {
+          "label": "团队16",
+          "count": 10
+        },
+        {
+          "label": "团队17",
+          "count": 9
+        },
+        {
+          "label": "团队18",
+          "count": 8
+        },
+        {
+          "label": "团队19",
+          "count": 7
+        },
+        {
+          "label": "团队20",
+          "count": 6
+        }
+      ]
+    },
+    "bestCosplayPerson": {
+      "title": "最佳COSPLAY个人",
+      "items": [
+        {
+          "label": "个人1",
+          "count": 30
+        },
+        {
+          "label": "个人2",
+          "count": 28
+        },
+        {
+          "label": "个人3",
+          "count": 27
+        },
+        {
+          "label": "个人4",
+          "count": 26
+        },
+        {
+          "label": "个人5",
+          "count": 24
+        },
+        {
+          "label": "个人6",
+          "count": 23
+        },
+        {
+          "label": "个人7",
+          "count": 22
+        },
+        {
+          "label": "个人8",
+          "count": 21
+        },
+        {
+          "label": "个人9",
+          "count": 20
+        },
+        {
+          "label": "个人10",
+          "count": 19
+        },
+        {
+          "label": "个人11",
+          "count": 18
+        },
+        {
+          "label": "个人12",
+          "count": 17
+        },
+        {
+          "label": "个人13",
+          "count": 16
+        },
+        {
+          "label": "个人14",
+          "count": 15
+        },
+        {
+          "label": "个人15",
+          "count": 14
+        },
+        {
+          "label": "个人16",
+          "count": 13
+        },
+        {
+          "label": "个人17",
+          "count": 12
+        },
+        {
+          "label": "个人18",
+          "count": 11
+        },
+        {
+          "label": "个人19",
+          "count": 10
+        },
+        {
+          "label": "个人20",
+          "count": 9
+        },
+        {
+          "label": "个人21",
+          "count": 8
+        },
+        {
+          "label": "个人22",
+          "count": 7
+        },
+        {
+          "label": "个人23",
+          "count": 6
+        },
+        {
+          "label": "个人24",
+          "count": 5
+        },
+        {
+          "label": "个人25",
+          "count": 4
+        }
+      ]
+    }
+  }
+}

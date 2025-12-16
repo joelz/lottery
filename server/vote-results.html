@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0"
+    />
+    <title>年会最佳节目投票结果</title>
+    <style>
+      :root {
+        color-scheme: light;
+        --bg: #f7f8fa;
+        --panel-bg: #ffffff;
+        --panel-border: #e0e4ec;
+        --text: #1f2a37;
+        --muted: #5f6b7c;
+        --accent-a: #2f6fed;
+        --accent-b: #29b5d9;
+        --accent-c: #8b5cf6;
+        --shadow: 0 20px 35px rgba(8, 15, 52, 0.12);
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        min-height: 100vh;
+        font-family: "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
+        background: var(--bg);
+        color: var(--text);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 2vw;
+      }
+
+      main {
+        width: min(94vw, 180vh);
+        aspect-ratio: 2 / 1;
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 1.6rem;
+      }
+
+      .panel {
+        background: var(--panel-bg);
+        border: 1px solid var(--panel-border);
+        border-radius: 20px;
+        padding: 1.6rem;
+        display: flex;
+        flex-direction: column;
+        box-shadow: var(--shadow);
+      }
+
+      header {
+        display: flex;
+        align-items: baseline;
+        justify-content: space-between;
+        margin-bottom: 0.8rem;
+      }
+
+      h2 {
+        font-size: 1.35rem;
+        font-weight: 600;
+        margin: 0;
+      }
+
+      .stat {
+        font-size: 0.9rem;
+        color: var(--muted);
+      }
+
+      .chart {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        align-items: stretch;
+        gap: 0.9rem;
+        padding: 0.4rem 0.2rem 0.8rem;
+        min-height: 20rem;
+      }
+
+      .bar {
+        display: flex;
+        align-items: center;
+        gap: 0.8rem;
+        min-width: 0;
+      }
+
+      .bar-label {
+        flex: 0 0 28%;
+        font-size: 0.95rem;
+        text-align: right;
+        color: var(--muted);
+        padding: 0 0.6rem;
+        word-break: break-word;
+      }
+
+      .bar-track {
+        flex: 1 1 auto;
+        height: 18px;
+        background: linear-gradient(90deg, #f0f4f9 0%, #e2e8f0 100%);
+        border-radius: 999px;
+        position: relative;
+        overflow: hidden;
+        display: flex;
+        align-items: center;
+      }
+
+      .bar-fill {
+        --target-width: 0%;
+        height: 100%;
+        width: 0%;
+        border-radius: inherit;
+        transition: width 1s cubic-bezier(0.16, 1, 0.3, 1);
+      }
+
+      .bar-fill.animate {
+        width: var(--target-width);
+      }
+
+      .bar-count {
+        flex: 0 0 auto;
+        font-size: 1rem;
+        font-weight: 600;
+        color: var(--text);
+        min-width: 3.5rem;
+      }
+
+      footer {
+        margin-top: 1.2rem;
+        font-size: 0.85rem;
+        color: var(--muted);
+        display: flex;
+        justify-content: space-between;
+        gap: 1rem;
+        flex-wrap: wrap;
+      }
+
+      .error {
+        width: min(94vw, 600px);
+        background: #fff5f5;
+        color: #991b1b;
+        padding: 1.2rem 1.4rem;
+        border-radius: 16px;
+        border: 1px solid #fecaca;
+        box-shadow: var(--shadow);
+        font-size: 1rem;
+      }
+
+      @media (max-width: 1024px) {
+        main {
+          grid-template-columns: 1fr;
+          aspect-ratio: auto;
+          width: min(94vw, 600px);
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <!--
+      If you need fresh data:
+        1) Run `node build-annual-best-data.js` in the same directory.
+        2) Reload this page so it fetches the latest vote-data.json output.
+    -->
+    <div id="app" aria-live="polite"></div>
+
+    <script>
+      const PANEL_CONFIG = [
+        { key: "bestProgram", accent: "var(--accent-a)" },
+        { key: "bestCosplayTeam", accent: "var(--accent-b)" },
+        { key: "bestCosplayPerson", accent: "var(--accent-c)" }
+      ];
+
+      async function fetchVoteData() {
+        const response = await fetch(`vote-data.json?ts=${Date.now()}`);
+        if (!response.ok) {
+          throw new Error("无法获取投票数据");
+        }
+        return response.json();
+      }
+
+      function buildPanel(awardKey, awardData, totalSubmissions) {
+        const panel = document.createElement("section");
+        panel.className = "panel";
+
+        const header = document.createElement("header");
+        header.innerHTML = `
+          <h2>${awardData.title}</h2>
+          <div class="stat">共 ${awardData.items.length || 0} 个候选</div>
+        `;
+        panel.appendChild(header);
+
+        const chart = document.createElement("div");
+        chart.className = "chart";
+
+        if (!awardData.items.length) {
+          const empty = document.createElement("div");
+          empty.className = "stat";
+          empty.textContent = "暂无投票数据";
+          chart.appendChild(empty);
+        } else {
+          const maxCount = Math.max(
+            ...awardData.items.map(item => item.count),
+            1
+          );
+          awardData.items.forEach(item => {
+            const bar = document.createElement("div");
+            bar.className = "bar";
+
+            const track = document.createElement("div");
+            track.className = "bar-track";
+
+            const fill = document.createElement("div");
+            fill.className = "bar-fill";
+            fill.style.background = `linear-gradient(90deg, ${getComputedStyle(
+              document.documentElement
+            ).getPropertyValue("--panel-bg")} 0%, ${
+              PANEL_CONFIG.find(cfg => cfg.key === awardKey)?.accent ||
+              "var(--accent-a)"
+            } 100%)`;
+
+            const percent =
+              Math.round((item.count / maxCount) * 100 * 100) / 100 + "%";
+            fill.style.setProperty("--target-width", percent);
+
+            track.appendChild(fill);
+            bar.appendChild(
+              (() => {
+                const label = document.createElement("div");
+                label.className = "bar-label";
+                label.textContent = item.label;
+                return label;
+              })()
+            );
+            bar.appendChild(track);
+            const countLabel = document.createElement("div");
+            countLabel.className = "bar-count";
+            countLabel.textContent = `${item.count} 票`;
+            bar.appendChild(countLabel);
+
+            chart.appendChild(bar);
+
+            requestAnimationFrame(() => {
+              fill.classList.add("animate");
+            });
+          });
+        }
+
+        panel.appendChild(chart);
+
+        const footer = document.createElement("footer");
+        footer.innerHTML = `
+          <span>投票占比 = 票数 / ${totalSubmissions} 份有效问卷</span>
+          <span>展示顺序：票数从高到低</span>
+        `;
+        panel.appendChild(footer);
+
+        return panel;
+      }
+
+      function buildLayout(data) {
+        const container = document.createElement("main");
+        PANEL_CONFIG.forEach(cfg => {
+          const awardData = data.awards[cfg.key];
+          if (!awardData) {
+            return;
+          }
+          container.appendChild(
+            buildPanel(cfg.key, awardData, data.totalSubmissions)
+          );
+        });
+        return container;
+      }
+
+      function buildMeta(data) {
+        const meta = document.createElement("footer");
+        meta.innerHTML = `
+          <span>数据来源：${data.sourceFile}</span>
+          <span>最近更新：${new Date(data.updatedAt).toLocaleString()}</span>
+        `;
+        return meta;
+      }
+
+      async function init() {
+        const mount = document.getElementById("app");
+        try {
+          const data = await fetchVoteData();
+          mount.innerHTML = "";
+          mount.appendChild(buildLayout(data));
+          mount.appendChild(buildMeta(data));
+        } catch (err) {
+          const errorBox = document.createElement("div");
+          errorBox.className = "error";
+          errorBox.textContent = err.message;
+          mount.innerHTML = "";
+          mount.appendChild(errorBox);
+        }
+      }
+
+      init();
+    </script>
+  </body>
+</html>
