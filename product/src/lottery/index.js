@@ -498,8 +498,8 @@ function createCard(user, isBold, id, showTable) {
     element.style.backgroundColor =
       "rgba(0,127,127," + (Math.random() * 0.7 + 0.25) + ")";
   }
-  //添加公司标识
-  element.appendChild(createElement("company", user[3] || ""));
+  //添加部门标识
+  element.appendChild(createElement("company", user[2] || ""));
 
   element.appendChild(createElement("name", user[1]));
 
@@ -628,7 +628,7 @@ function render() {
 
 function selectCard(duration = 600) {
   rotate = false;
-  let width = 140,
+  let width = 180,
     height = 80,
     locates = [];
 
@@ -960,7 +960,7 @@ function buildEligiblePool(prizeType, options = {}) {
 function changeCard(cardIndex, user) {
   let card = threeDCards[cardIndex].element;
   
-  card.innerHTML = `<div class="company">${user[3] || ""}</div>
+  card.innerHTML = `<div class="company">${user[2] || ""}</div>
                    <div class="name">${user[1]}</div>
                    <div class="details"></div>`;
 }

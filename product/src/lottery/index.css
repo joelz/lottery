@@ -138,6 +138,7 @@ button:active {
   transition: background-color 1.5s ease-in 0.3s;
   background-color: rgba(253, 105, 0, 0.85) !important;
   box-shadow: 0 0 12px rgba(253, 105, 0, 0.95);
+  width: 18vh;
   height: 8vh;
 }
 
@@ -481,6 +482,40 @@ button:active {
   color: #db5c58;
   vertical-align: middle;
   padding: 0 6px;
+}
+
+/* 当前奖项图片列表 */
+.prize-img-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1vh;
+  margin: 1.5vh 0;
+  padding-left: 1.2vh;
+}
+
+.prize-img-item {
+  width: 12vh;
+  height: 12vh;
+  border-radius: 6px;
+  background-color: rgba(0, 127, 127, 0.37);
+  border: 2px solid rgba(127, 255, 255, 0.4);
+  box-shadow: 0 0 12px rgba(0, 255, 255, 0.3);
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.prize-img-item:hover {
+  transform: scale(1.08);
+  box-shadow: 0 0 20px rgba(0, 255, 255, 0.5);
+}
+
+.prize-img-item img {
+  max-width: 90%;
+  max-height: 90%;
+  object-fit: contain;
 }
 
 .qipao-container {

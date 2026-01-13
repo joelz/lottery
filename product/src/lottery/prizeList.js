@@ -153,12 +153,45 @@ function setPrizes(pri) {
   lasetPrizeIndex = pri.length - 1;
 }
 
+function generatePrizeImagesHtml(currentPrize) {
+  if (!currentPrize || !currentPrize.img || !Array.isArray(currentPrize.img) || currentPrize.img.length === 0) {
+    return "";
+  }
+  
+  let html = '<div class="prize-img-list">';
+  currentPrize.img.forEach((imgSrc, index) => {
+    html += `<div class="prize-img-item"><img src="${imgSrc}" alt="${currentPrize.title || currentPrize.text} 图片${index + 1}"></div>`;
+  });
+  html += '</div>';
+  return html;
+}
+
+function updatePrizeImages(currentPrize) {
+  const prizeBar = document.querySelector("#prizeBar");
+  if (!prizeBar) return;
+
+  // 移除旧的图片列表
+  const oldImgList = prizeBar.querySelector(".prize-img-list");
+  if (oldImgList) {
+    oldImgList.remove();
+  }
+
+  // 如果当前奖项有图片，则在 .prize-mess 后面插入
+  if (currentPrize && currentPrize.img && Array.isArray(currentPrize.img) && currentPrize.img.length > 0) {
+    const prizeMess = prizeBar.querySelector(".prize-mess");
+    if (prizeMess) {
+      prizeMess.insertAdjacentHTML("afterend", generatePrizeImagesHtml(currentPrize));
+    }
+  }
+}
+
 function showPrizeList(currentPrizeIndex) {
   let currentPrize = prizes[currentPrizeIndex];
   if (currentPrize.type === defaultType) {
     currentPrize.count === "不限制";
   }
-  let htmlCode = `<div class="prize-mess">正在抽取<label id="prizeType" class="prize-shine">${currentPrize.text}</label><label id="prizeText" class="prize-shine">${currentPrize.title}</label>，共<label id="prizeTotal" class="prize-shine">${currentPrize.count}</label>个，剩余<label id="prizeLeft" class="prize-shine">${currentPrize.count}</label>个</div><ul class="prize-list">`;
+  
+  let htmlCode = `<div class="prize-mess">正在抽取<label id="prizeType" class="prize-shine">${currentPrize.text}</label><label id="prizeText" class="prize-shine">${currentPrize.title}</label>，共<label id="prizeTotal" class="prize-shine">${currentPrize.count}</label>个，剩余<label id="prizeLeft" class="prize-shine">${currentPrize.count}</label>个</div>${generatePrizeImagesHtml(currentPrize)}<ul class="prize-list">`;
   prizes.forEach(item => {
     if (item.type === defaultType) {
       return true;
@@ -243,6 +276,9 @@ let setPrizeData = (function () {
       elements.box && elements.box.classList.add("shine");
       prizeElement.prizeType.textContent = currentPrize.text;
       prizeElement.prizeText.textContent = currentPrize.title;
+
+      // 更新当前奖项图片列表
+      updatePrizeImages(currentPrize);
 
       lasetPrizeIndex = currentPrizeIndex;
     }

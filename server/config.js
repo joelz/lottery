@@ -15,31 +15,31 @@ const prizes = [
   },
   {
     type: 1,
-    count: 2,
-    text: "一等奖",
-    title: "Mac Pro",
-    img: "../img/mbp.jpg"
+    count: 1,
+    text: "特等奖",
+    title: "",
+    img: ["../img/mbp.jpg"]
   },
   {
     type: 2,
-    count: 2,
-    text: "二等奖",
-    title: "华为 Mate30",
-    img: "../img/huawei.png"
+    count: 5,
+    text: "一等奖",
+    title: "",
+    img: ["../img/huawei.png", "../img/huawei.png", "../img/huawei.png", "../img/huawei.png"]
   },
   {
     type: 3,
-    count: 2,
-    text: "三等奖",
-    title: "Ipad Mini5",
-    img: "../img/ipad.jpg"
+    count: 15,
+    text: "二等奖",
+    title: "",
+    img: ["../img/ipad.jpg", "../img/ipad.jpg", "../img/ipad.jpg", "../img/ipad.jpg"]
   },
   {
     type: 4,
-    count: 2,
-    text: "四等奖",
-    title: "大疆无人机",
-    img: "../img/spark.jpg"
+    count: 20,
+    text: "三等奖",
+    title: "",
+    img: ["../img/spark.jpg", "../img/spark.jpg", "../img/spark.jpg", "../img/spark.jpg"]
   },
 ];
 
@@ -54,10 +54,10 @@ const EACH_COUNT = [1, 1, 5, 6, 7, 8];
  */
 const PRIZE_EXCLUDES = {
   // 例如：1: ["10001", "10002"]
-  1: ["000002", "000004", "000006", "000005"],
-  2: ["000002", "000003", "000007"],
-  3: ["000002"],
-  4: ["000002"],
+  // 1: ["000002", "000004", "000006", "000005"],
+  // 2: ["000002", "000003", "000007"],
+  // 3: ["000002"],
+  // 4: ["000002"],
 };
 
 module.exports = {
