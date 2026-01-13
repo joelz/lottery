@@ -84,7 +84,7 @@
     if (warp == 0) {
       if (backgroundReady) {
         c.drawImage(backgroundImage, 0, 0, canvas.width, canvas.height);
-        c.fillStyle = "rgba(0, 10, 20, 0.7)";
+        c.fillStyle = "rgba(0, 10, 20, 0.5)";
         c.fillRect(0, 0, canvas.width, canvas.height);
       } else {
         c.fillStyle = "rgba(0,10,20,1)";
