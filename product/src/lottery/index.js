@@ -395,6 +395,11 @@ function bindEvent() {
       // 抽奖
       case "lottery":
         if (e.target.innerHTML === "准备抽取下一奖项") {
+          // 检查当前奖项是否为最后一个奖项（type 为 1）
+          if (currentPrize && currentPrize.type === 1) {
+            addQipao("已经是最后一个奖项");
+            return;
+          }
           // 每次抽奖前先保存上一次的抽奖数据
           saveData().then(res => {
             resetCard().then(res => {
