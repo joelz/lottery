@@ -20,8 +20,7 @@ const OUTPUT_FILE = path.join(__dirname, "vote-data.json");
 
 const COLUMN_ALIASES = {
   program: ["最佳节目（必填）", "最佳节目"],
-  team: ["最佳COSPLAY团队（必填）", "最佳COSPLAY团队"],
-  person: ["最佳个人（必填）", "最佳个人"]
+  person: ["最佳COSPLAY个人（必填）", "最佳COSPLAY个人"]
 };
 
 function assertFileExists(filePath) {
@@ -58,11 +57,15 @@ function findColumnIndex(headers, aliases) {
 function buildCounters(rows, columnIndex) {
   const counter = Object.create(null);
   rows.forEach(row => {
-    const choice = normalizeValue(row[columnIndex]);
-    if (!choice) {
+    const cellValue = normalizeValue(row[columnIndex]);
+    if (!cellValue) {
       return;
     }
-    counter[choice] = (counter[choice] || 0) + 1;
+    // 多选结果用英文逗号分隔，拆分后逐个统计
+    const choices = cellValue.split(",").map(s => s.trim()).filter(Boolean);
+    choices.forEach(choice => {
+      counter[choice] = (counter[choice] || 0) + 1;
+    });
   });
   return Object.entries(counter)
     .map(([label, count]) => ({ label, count }))
@@ -84,7 +87,6 @@ function main() {
 
   const columnIndexes = {
     program: findColumnIndex(headers, COLUMN_ALIASES.program),
-    team: findColumnIndex(headers, COLUMN_ALIASES.team),
     person: findColumnIndex(headers, COLUMN_ALIASES.person)
   };
 
@@ -102,10 +104,6 @@ function main() {
       bestProgram: {
         title: "最佳节目",
         items: buildCounters(rows, columnIndexes.program)
-      },
-      bestCosplayTeam: {
-        title: "最佳COSPLAY团队",
-        items: buildCounters(rows, columnIndexes.team)
       },
       bestCosplayPerson: {
         title: "最佳COSPLAY个人",
