@@ -895,10 +895,13 @@ function changePrize(isInit = false) {
 
 /**
  * 随机抽奖
+ * 使用密码学安全随机数 crypto.getRandomValues
  */
 function random(num) {
-  // Math.floor取到0-num-1之间数字的概率是相等的
-  return Math.floor(Math.random() * num);
+  if (num <= 1) return 0;
+  const array = new Uint32Array(1);
+  crypto.getRandomValues(array);
+  return array[0] % num;
 }
 
 function prepareExcludeMap(source = {}) {

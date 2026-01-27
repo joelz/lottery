@@ -60,11 +60,30 @@ function main() {
   const [allHeaderRaw, ...allRows] = allSheet;
   const header = Array.isArray(allHeaderRaw) && allHeaderRaw.length ? allHeaderRaw : HEADER_FALLBACK;
 
+  // 找到「请签到（必填）」列的索引
+  const signinHeader = signinSheet[0];
+  const signinColIndex = signinHeader.findIndex(
+    (col) => String(col || '').includes('请签到')
+  );
+  if (signinColIndex === -1) {
+    console.warn('签到列表中未找到「请签到（必填）」列，退出。');
+    return;
+  }
+
   const signinKeys = new Set();
   signinSheet.slice(1).forEach((row) => {
-    const key = buildKey(row[0], row[1]);
-    if (key) {
-      signinKeys.add(key);
+    const cellValue = String(row[signinColIndex] || '').trim();
+    if (!cellValue) return;
+
+    // 解析格式：「部门, 姓名, 桌号」，如「财务部, 李娟, 11桌」
+    const parts = cellValue.split(/[,，]\s*/);
+    if (parts.length >= 2) {
+      const department = parts[0].trim();
+      const name = parts[1].trim();
+      const key = buildKey(name, department);
+      if (key) {
+        signinKeys.add(key);
+      }
     }
   });
 

@@ -1,5 +1,6 @@
 const fs = require("fs");
 const path = require("path");
+const crypto = require("crypto");
 const xlsx = require("node-xlsx").default;
 let cwd = path.join(__dirname, "cache");
 
@@ -124,16 +125,28 @@ function saveErrorDataFile(data) {
 }
 
 /**
- * 洗牌算法
+ * 使用密码学安全随机数生成 0 到 max-1 之间的整数
+ * @param {number} max - 上限（不包含）
+ * @returns {number} 随机整数
+ */
+function secureRandomInt(max) {
+  if (max <= 1) return 0;
+  const randomBytes = crypto.randomBytes(4);
+  const randomValue = randomBytes.readUInt32BE(0);
+  return randomValue % max;
+}
+
+/**
+ * 洗牌算法 (Fisher-Yates)
+ * 使用密码学安全随机数 crypto.randomBytes
  * @param {*} arr
  */
 function shuffle(arr) {
   let i = arr.length;
-  while (i) {
-    let j = Math.floor(Math.random() * i--);
-    let temp = arr[j];
-    arr[j] = arr[i];
-    arr[i] = temp;
+  while (i > 1) {
+    let j = secureRandomInt(i);
+    i--;
+    [arr[i], arr[j]] = [arr[j], arr[i]];
   }
 }
 
