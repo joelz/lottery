@@ -633,8 +633,8 @@ function render() {
 
 function selectCard(duration = 600) {
   rotate = false;
-  let width = 180,
-    height = 80,
+  let width = 240,
+    height = 120,
     locates = [];
 
   // Calculate rows and positions
@@ -642,7 +642,9 @@ function selectCard(duration = 600) {
   let totalHeight = (rows - 1) * height;
   
   // Calculate starting Y position to center vertically
-  let startY = totalHeight / 2;
+  // verticalOffset: 正值向上移动，负值向下移动
+  let verticalOffset = 50;
+  let startY = totalHeight / 2 + verticalOffset;
 
   // Generate position for each card, 5 per row
   for (let i = 0; i < currentLuckys.length; i++) {
