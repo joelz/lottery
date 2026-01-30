@@ -18,28 +18,28 @@ const prizes = [
     count: 1,
     text: "特等奖",
     title: "",
-    img: ["../img/mbp.jpg"]
+    img: ["../img/0-1.png"]
   },
   {
     type: 2,
     count: 5,
     text: "一等奖",
     title: "",
-    img: ["../img/huawei.png", "../img/huawei.png", "../img/huawei.png", "../img/huawei.png"]
+    img: ["../img/1-1.jpg", "../img/1-2.png", "../img/1-3.png", "../img/1-4.png"]
   },
   {
     type: 3,
-    count: 15,
+    count: 16,
     text: "二等奖",
     title: "",
-    img: ["../img/ipad.jpg", "../img/ipad.jpg", "../img/ipad.jpg", "../img/ipad.jpg"]
+    img: ["../img/2-1.png", "../img/2-2.png"]
   },
   {
     type: 4,
     count: 20,
     text: "三等奖",
     title: "",
-    img: ["../img/spark.jpg", "../img/spark.jpg", "../img/spark.jpg", "../img/spark.jpg"]
+    img: ["../img/3-1.png", "../img/3-2.png", "../img/3-3.png", "../img/3-4.png"]
   },
 ];
 
